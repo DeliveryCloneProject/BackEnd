@@ -5,5 +5,6 @@ create table delivery_user (
     password varchar(500) not null,
     status varchar(10) not null,
     type varchar(10) not null,
+    created_at date default sysdate() not null,
      primary key (id)
 );
