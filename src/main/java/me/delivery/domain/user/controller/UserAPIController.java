@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.net.http.HttpResponse;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -15,9 +18,9 @@ public class UserAPIController {
     private final UserService userService;
 
     @GetMapping("/find/{nickname}")
-    @ResponseStatus(value= HttpStatus.NO_CONTENT)
-    public void fineNickname (@PathVariable String nickname){
+    public User fineNickname (@PathVariable String nickname, HttpServletResponse res){
         User alreadyJoinedUser = userService.fineByNickname(nickname);
+        return alreadyJoinedUser;
     }
 
 }
