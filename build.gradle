@@ -35,7 +35,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0'
 
-
+    implementation 'com.vividsolutions:jts:1.13'
+    implementation 'org.hibernate:hibernate-spatial:5.2.5.Final'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 }

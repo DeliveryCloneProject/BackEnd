@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserAddress {
     // id, createdAt - baseEntity를 상속후 삭제될 예정
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @CreatedDate
     private LocalDateTime createdAt;
@@ -35,7 +35,7 @@ public class UserAddress {
     private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "addressId", insertable = false, updatable = false)
     private Address address;
 
     @Builder

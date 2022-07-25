@@ -4,9 +4,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-@Repository
-@RequiredArgsConstructor
-public class AddressQueryRepository {
-    private final JPAQueryFactory queryFactory;
-
-}
+//@Repository
+//@RequiredArgsConstructor
+//public class AddressQueryRepository {
+//    private final JPAQueryFactory queryFactory;
+//
+//}

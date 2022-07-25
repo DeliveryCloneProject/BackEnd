@@ -5,14 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.delivery.domain.address.model.vo.AddressVO;
+import org.springframework.data.geo.Point;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
+@Entity(name = "address")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,8 +24,8 @@ public class Address {
     private String road;
     private Integer mainNumber;
     private Integer subNumber;
-    private BigDecimal x;
-    private BigDecimal y;
+    @Column(name = "point", columnDefinition = "POINT")
+    private Point point;
 
     @Builder
     private Address(
@@ -48,8 +46,7 @@ public class Address {
         this.road = road;
         this.mainNumber = mainNumber;
         this.subNumber = subNumber;
-        this.x = x;
-        this.y = y;
+        this.point = new Point(x.doubleValue(), y.doubleValue());
     }
 
     public AddressVO toImmutable() {
@@ -62,8 +59,7 @@ public class Address {
                 .road(road)
                 .mainNumber(mainNumber)
                 .subNumber(subNumber)
-                .x(x)
-                .y(y)
+                .point(point)
                 .build();
     }
 }
