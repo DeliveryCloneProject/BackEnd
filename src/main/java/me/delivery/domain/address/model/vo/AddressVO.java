@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import me.delivery.domain.address.model.entity.Address;
+import org.springframework.data.geo.Point;
 
 import java.math.BigDecimal;
 
@@ -20,8 +21,7 @@ public class AddressVO {
     private String road;
     private Integer mainNumber;
     private Integer subNumber;
-    private BigDecimal x;
-    private BigDecimal y;
+    private Point point;
 
     public static AddressVO from(Address address) {
         return AddressVO.builder()
@@ -33,8 +33,7 @@ public class AddressVO {
                 .road(address.getRoad())
                 .mainNumber(address.getMainNumber())
                 .subNumber(address.getSubNumber())
-                .x(address.getX())
-                .y(address.getY())
+                .point(address.getPoint())
                 .build();
     }
 }
