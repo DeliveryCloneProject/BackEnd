@@ -1,6 +1,8 @@
 package me.delivery.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.delivery.common.exception.DeliveryExceotion;
+import me.delivery.domain.user.model.dto.ResponseObject;
 import me.delivery.domain.user.model.entity.User;
 import me.delivery.domain.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -9,18 +11,50 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.net.http.HttpResponse;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserAPIController {
-
+    Logger logger = Logger.getLogger(UserAPIController.class.getName());
     private final UserService userService;
 
+    /**
+     * 가입하려는 고객의 닉네임 사용가능 여부 조회
+     * @param nickname
+     * @return boolean 
+     */
     @GetMapping("/find/{nickname}")
-    public User fineNickname (@PathVariable String nickname, HttpServletResponse res){
+    @ResponseBody
+    public ResponseObject fineNickname (@PathVariable String nickname, HttpServletResponse res){
+        ResponseObject result = new ResponseObject();
         User alreadyJoinedUser = userService.fineByNickname(nickname);
-        return alreadyJoinedUser;
+        logger.info("result = " + alreadyJoinedUser);
+        //기존 닉네임이 존재하지 않는다면 true. 사용가능함을 return
+        if(alreadyJoinedUser == null){
+            result.setResult(true);
+        }else{
+            result.setResult(false);
+        }
+        return result;
+    }
+
+    @PostMapping("/join/createUser")
+    public ResponseObject createUser(@RequestBody User userInfo, HttpServletResponse res){
+        ResponseObject result = new ResponseObject();
+
+        try{
+            logger.info("start createUser. param = " + userInfo);
+            userService.createUser(userInfo);
+            result.setResult(true);
+        }catch(DeliveryExceotion e){
+            logger.info(e.getMessage());
+            res.setStatus(500);
+            result.setResult(false);
+        }
+        return result;
     }
 
 }

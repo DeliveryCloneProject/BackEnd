@@ -4,4 +4,6 @@ import me.delivery.domain.user.model.entity.User;
 
 public interface UserService {
     User fineByNickname(String nickname);
+
+    void createUser(User userInfo);
 }
