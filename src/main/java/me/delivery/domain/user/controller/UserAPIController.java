@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import me.delivery.common.exception.DeliveryExceotion;
 import me.delivery.domain.user.model.dto.ResponseObject;
 import me.delivery.domain.user.model.entity.User;
+import me.delivery.domain.user.model.entity.UserStatus;
+import me.delivery.domain.user.model.vo.UserCreate;
+import me.delivery.domain.user.model.vo.UserCreateParam;
 import me.delivery.domain.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.http.HttpResponse;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/users")
@@ -42,17 +46,39 @@ public class UserAPIController {
     }
 
     @PostMapping("/join/createUser")
-    public ResponseObject createUser(@RequestBody User userInfo, HttpServletResponse res){
+    public ResponseObject createUser(@RequestBody UserCreateParam userInfo, HttpServletResponse res){
         ResponseObject result = new ResponseObject();
 
         try{
             logger.info("start createUser. param = " + userInfo);
-            userService.createUser(userInfo);
+
+            String regExp = "^[0-9]*$";
+            if(!Pattern.matches(regExp, userInfo.getPhone()))
+                throw new DeliveryExceotion("휴대전화 번호가 올바르지 않습니다.");
+
+            
+            UserCreate param = userInfo.toUserCreate();
+            param.setStatus(UserStatus.Active);
+            userService.createUser(param);
             result.setResult(true);
         }catch(DeliveryExceotion e){
             logger.info(e.getMessage());
             res.setStatus(500);
             result.setResult(false);
+        }
+        return result;
+    }
+
+    @PostMapping("/quit/{userId}")
+    public ResponseObject quitUser(@PathVariable long userId, HttpServletResponse res){
+        ResponseObject result = new ResponseObject();
+        try{
+            userService.quitUser(userId);
+            result.setResult(true);
+        }catch(DeliveryExceotion e){
+            logger.info(e.getMessage());
+            result.setResult(false);
+            res.setStatus(500);
         }
         return result;
     }
