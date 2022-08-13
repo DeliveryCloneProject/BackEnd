@@ -34,7 +34,8 @@ public class UserAPIController {
     @ResponseBody
     public ResponseObject fineNickname (@PathVariable String nickname, HttpServletResponse res){
         ResponseObject result = new ResponseObject();
-        User alreadyJoinedUser = userService.fineByNickname(nickname);
+        System.out.println(UserStatus.Active.name());
+        User alreadyJoinedUser = userService.fineByNickname(nickname,UserStatus.Active);
         logger.info("result = " + alreadyJoinedUser);
         //기존 닉네임이 존재하지 않는다면 true. 사용가능함을 return
         if(alreadyJoinedUser == null){
@@ -56,7 +57,7 @@ public class UserAPIController {
             if(!Pattern.matches(regExp, userInfo.getPhone()))
                 throw new DeliveryExceotion("휴대전화 번호가 올바르지 않습니다.");
 
-            
+
             UserCreate param = userInfo.toUserCreate();
             param.setStatus(UserStatus.Active);
             userService.createUser(param);

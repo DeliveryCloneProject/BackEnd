@@ -23,8 +23,9 @@ public class IUserService implements UserService {
      * @return user
      */
     @Override
-    public User fineByNickname(String nickname) {
-        User user = userRepository.findByNickname(nickname);
+    public User fineByNickname(String nickname, UserStatus status) {
+        System.out.println("@@@@@@@@@@@"+status);
+        User user = userRepository.findByNicknameAndStatus(nickname, status);
         return user;
     }
 
