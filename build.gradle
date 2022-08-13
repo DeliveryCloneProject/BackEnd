@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'org.flywaydb.flyway' version '7.1.1'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'me'
@@ -25,11 +26,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.session:spring-session-data-redis'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-mysql'
+    implementation 'com.querydsl:querydsl-jpa:5.0.0'
     compileOnly 'org.projectlombok:lombok'
+    compileOnly 'io.lettuce:lettuce-core:6.1.8.RELEASE'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0'
+
+    implementation 'com.vividsolutions:jts:1.13'
+    implementation 'org.hibernate:hibernate-spatial:5.2.5.Final'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 }
@@ -42,4 +50,22 @@ flyway{
     url = 'jdbc:mariadb://localhost:3306/delivery?characterEncoding=utf8&character_set_server=utf8mb4&useSSL=false&serverTimezone=Asia/Seoul'
     user = 'root'
     password = 'root'
+}
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
 }
