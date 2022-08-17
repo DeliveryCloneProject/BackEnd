@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.delivery.common.exception.DeliveryExceotion;
 import me.delivery.config.exception.BaseException;
 import me.delivery.config.exception.InternalServerErrorException;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -82,5 +83,13 @@ public class RestControllerExceptionAdvice {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @ExceptionHandler(DeliveryExceotion.class)
+    private ResponseEntity<ErrorResponse> exception(DeliveryExceotion e){
+        log.debug("error===============");
+        log.error(e.getMessage(), e);
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        return generateResponse(status, e.getMessage());
     }
 }

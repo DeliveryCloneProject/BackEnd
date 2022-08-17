@@ -1,7 +1,9 @@
 package me.delivery.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.delivery.common.exception.DeliveryExceotion;
+import me.delivery.config.exception.InternalServerErrorException;
 import me.delivery.domain.user.model.dto.ResponseObject;
 import me.delivery.domain.user.model.entity.User;
 import me.delivery.domain.user.model.entity.UserStatus;
@@ -13,17 +15,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.net.http.HttpResponse;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.validation.Valid;
 import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@RestControllerAdvice
+@Slf4j
 public class UserAPIController {
-    Logger logger = Logger.getLogger(UserAPIController.class.getName());
     private final UserService userService;
+
 
     /**
      * 가입하려는 고객의 닉네임 사용가능 여부 조회
@@ -32,56 +34,47 @@ public class UserAPIController {
      */
     @GetMapping("/find/{nickname}")
     @ResponseBody
-    public ResponseObject fineNickname (@PathVariable String nickname, HttpServletResponse res){
-        ResponseObject result = new ResponseObject();
-        System.out.println(UserStatus.Active.name());
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity fineNickname (@PathVariable String nickname, HttpServletResponse res){
+        ResponseObject<Boolean> result = new ResponseObject<Boolean>();
+        log.debug("nickname = "+nickname);
         User alreadyJoinedUser = userService.fineByNickname(nickname,UserStatus.Active);
-        logger.info("result = " + alreadyJoinedUser);
         //기존 닉네임이 존재하지 않는다면 true. 사용가능함을 return
-        if(alreadyJoinedUser == null){
-            result.setResult(true);
-        }else{
-            result.setResult(false);
-        }
-        return result;
+//        if(alreadyJoinedUser == null){
+//        }else{
+//            result.set(false);
+//        }
+        result.set(true);
+        log.debug("result = "+result);
+        return ResponseEntity.status(200).body(result);
     }
 
     @PostMapping("/join/createUser")
-    public ResponseObject createUser(@RequestBody UserCreateParam userInfo, HttpServletResponse res){
-        ResponseObject result = new ResponseObject();
+    public ResponseEntity createUser(@RequestBody @Valid UserCreateParam userInfo, HttpServletResponse res){
+        ResponseObject<Boolean> result = new ResponseObject<Boolean>();
 
-        try{
-            logger.info("start createUser. param = " + userInfo);
+        String regExp = "^[0-9]*$";
+        if(!Pattern.matches(regExp, userInfo.getPhone()) || "".equals(userInfo.getPhone()) )
+            throw new DeliveryExceotion("휴대전화 번호가 올바르지 않습니다.");
 
-            String regExp = "^[0-9]*$";
-            if(!Pattern.matches(regExp, userInfo.getPhone()))
-                throw new DeliveryExceotion("휴대전화 번호가 올바르지 않습니다.");
-
-
-            UserCreate param = userInfo.toUserCreate();
-            param.setStatus(UserStatus.Active);
-            userService.createUser(param);
-            result.setResult(true);
-        }catch(DeliveryExceotion e){
-            logger.info(e.getMessage());
-            res.setStatus(500);
-            result.setResult(false);
-        }
-        return result;
+        UserCreate param = userInfo.toUserCreate();
+        param.setStatus(UserStatus.Active);
+        userService.createUser(param);
+        result.set(true);
+        return ResponseEntity.status(200).body(result);
     }
 
     @PostMapping("/quit/{userId}")
-    public ResponseObject quitUser(@PathVariable long userId, HttpServletResponse res){
-        ResponseObject result = new ResponseObject();
+    public ResponseEntity quitUser(@PathVariable long userId, HttpServletResponse res){
+        ResponseObject<Boolean> result = new ResponseObject<Boolean>();
         try{
             userService.quitUser(userId);
-            result.setResult(true);
+            result.set(true);
         }catch(DeliveryExceotion e){
-            logger.info(e.getMessage());
-            result.setResult(false);
+            result.set(false);
             res.setStatus(500);
         }
-        return result;
+        return ResponseEntity.status(200).body(result);
     }
 
 }
