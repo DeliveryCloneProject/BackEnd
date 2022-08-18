@@ -1,12 +1,11 @@
 package me.delivery.domain.user.model.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import me.delivery.domain.user.model.vo.UserCreate;
-
-import javax.persistence.*;
 
 @Entity(name = "delivery_user")
 @NoArgsConstructor

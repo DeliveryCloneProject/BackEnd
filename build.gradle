@@ -2,7 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+    id "idea"
 }
 
 group = 'me'
@@ -45,21 +45,16 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-def querydslDir = "$buildDir/generated/querydsl"
-
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
+def querydslDir = "$projectDir/src/main/generated/sources/annotationProcessor"
 
 sourceSets {
-    main.java.srcDir querydslDir
+    main.java.srcDir "$projectDir/src/main/generated"
 }
 
-configurations {
-    querydsl.extendsFrom compileClasspath
-}
-
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
+idea {
+    module {
+        sourceDirs += file(querydslDir)
+        generatedSourceDirs += file(querydslDir)
+        inheritOutputDirs = true
+    }
 }

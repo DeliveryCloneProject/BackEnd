@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+server.port: 9080
+
+flyway:
+  enabled: true
+  encoding: 'UTF-8'
