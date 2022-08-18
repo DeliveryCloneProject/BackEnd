@@ -32,7 +32,6 @@ public class UserService implements IUserService {
     /**
      * Description 사용자 등록
      */
-    @Transactional
     public void createUser(User user) {
         user.setStatusToActive();
 

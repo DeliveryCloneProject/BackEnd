@@ -1,24 +1,15 @@
 package me.delivery.domain.store.model.entity;
 
+import javax.persistence.Entity;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import me.delivery.domain.user.model.entity.BaseEntity;
 
 @Entity
 @Getter
 @Setter
-public class Store {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Store extends BaseEntity {
     private String name;
     private StoreStatus status;
-
-    public void a() {
-        System.out.println("");
-    }
-
 }
