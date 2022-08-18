@@ -2,14 +2,11 @@ package me.delivery.domain.user.controller;
 
 import javax.validation.Valid;
 
+import me.delivery.config.exception.BadRequestException;
+import me.delivery.config.exception.BaseException;
+import me.delivery.config.exception.InternalServerErrorException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +18,7 @@ import me.delivery.domain.user.service.IUserService;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 @Slf4j
+@RestControllerAdvice
 public class UserAPIController {
     private final IUserService userService;
 
@@ -29,7 +27,7 @@ public class UserAPIController {
      * 가입하려는 고객의 닉네임 사용가능 여부 조회
      */
     @GetMapping("/find/{nickname}")
-    public void fineNickname(@PathVariable String nickname) {
+    public void findNickname(@PathVariable String nickname) {
         userService.checkNicknameUsed(nickname);
     }
 
