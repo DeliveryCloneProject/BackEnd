@@ -6,3 +6,8 @@ spring:
     hibernate:
       ddl-auto: validate
 
+server.port: 9080
+
+flyway:
+  enabled: true
+  encoding: 'UTF-8'
