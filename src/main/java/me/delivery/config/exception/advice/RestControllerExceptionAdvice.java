@@ -87,7 +87,6 @@ public class RestControllerExceptionAdvice {
 
     @ExceptionHandler(DeliveryExceotion.class)
     private ResponseEntity<ErrorResponse> exception(DeliveryExceotion e){
-        log.debug("error===============");
         log.error(e.getMessage(), e);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return generateResponse(status, e.getMessage());

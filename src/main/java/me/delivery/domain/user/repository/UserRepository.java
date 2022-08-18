@@ -5,5 +5,5 @@ import me.delivery.domain.user.model.entity.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByNicknameAndStatus(String nickname, UserStatus status);
+    User findByNickname(String nickname);
 }

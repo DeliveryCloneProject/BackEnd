@@ -26,7 +26,6 @@ public class UserCreate {
                 .password(password)
                 .phone(phone)
                 .type(type)
-                .status(String.valueOf(status))
                 .build();
     }
 

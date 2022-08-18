@@ -3,6 +3,7 @@ package me.delivery.domain.user.model.entity;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import me.delivery.domain.user.model.vo.UserCreate;
 
 import javax.persistence.*;
@@ -28,18 +29,27 @@ public class User extends BaseEntity {
             String phone,
             String nickname,
             String password,
-            String status,
             String type
     ){
         this.phone = phone;
         this.nickname = nickname;
         this.password = password;
-        this.status = UserStatus.valueOf(status);
         this.type = UserType.valueOf(type);
     }
 
-    public void setStatus(UserStatus status){
-        this.status = status;
+
+    /**
+     * @Description 탈퇴 유저로 설정
+     */
+    public void setStatusToQuit(){
+        this.status = UserStatus.Quit;
+    }
+
+    /**
+     * @Description 활동 유저로 설정
+     */
+    public void setStatusToActive(){
+        this.status = UserStatus.Active;
     }
 
 }

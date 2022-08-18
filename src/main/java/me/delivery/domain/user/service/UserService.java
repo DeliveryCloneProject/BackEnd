@@ -7,7 +7,7 @@ import me.delivery.domain.user.model.vo.UserCreate;
 import me.delivery.domain.user.model.vo.UserCreateParam;
 
 public interface UserService {
-    User fineByNickname(String nickname, UserStatus status);
+    User findByNickname(String nickname);
 
     void createUser(UserCreate userInfo);
 

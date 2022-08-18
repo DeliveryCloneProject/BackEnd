@@ -1,6 +1,7 @@
 package me.delivery.domain.user.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.delivery.common.exception.DeliveryExceotion;
 import me.delivery.domain.user.model.entity.User;
 import me.delivery.domain.user.model.entity.UserStatus;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class IUserService implements UserService {
     private final UserRepository userRepository;
 
@@ -23,8 +25,8 @@ public class IUserService implements UserService {
      * @return user
      */
     @Override
-    public User fineByNickname(String nickname, UserStatus status) {
-        User user = userRepository.findByNicknameAndStatus(nickname, status);
+    public User findByNickname(String nickname) {
+        User user = userRepository.findByNickname(nickname);
         return user;
     }
 
@@ -35,7 +37,9 @@ public class IUserService implements UserService {
     @Override
     public void createUser(UserCreate userInfo) {
         try{
-            userRepository.saveAndFlush(userInfo.toEntity());
+            User member = userInfo.toEntity();
+            member.setStatusToActive();
+            userRepository.saveAndFlush(member);
         }catch(Exception e){
             throw new DeliveryExceotion("유저 등록 중 오류");
         }
@@ -50,7 +54,7 @@ public class IUserService implements UserService {
         try{
             Optional<User> user = userRepository.findById(userId);
             User param = user.get();
-            param.setStatus(UserStatus.Quit);
+            param.setStatusToQuit();
 
             userRepository.save(param);
         }catch(Exception e){
