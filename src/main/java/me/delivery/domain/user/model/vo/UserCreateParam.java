@@ -1,11 +1,16 @@
 package me.delivery.domain.user.model.vo;
 
+import java.util.regex.Pattern;
+
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.validation.constraints.NotNull;
+import me.delivery.config.exception.BadRequestException;
+import me.delivery.domain.user.model.entity.User;
+import me.delivery.domain.user.model.error.UserErrorCode;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,16 +30,24 @@ public class UserCreateParam {
     @NotNull(message = "유저 타입이 필요합니다.")
     private String type;
 
-    public UserCreate toUserCreate(){
-        UserCreate vo = new UserCreate();
-        vo.setNickname(this.nickname);
-        vo.setPassword(this.password);
-        vo.setPhone(this.phone);
-        vo.setType(this.type);
-        return vo;
+    public User toEntity(){
+        validate();
+        return User.builder()
+            .nickname(nickname)
+            .password(password)
+            .phone(phone)
+            .type(type)
+            .build();
     }
-    @Override
-    public String toString(){
-        return "nickname = "+nickname+" / phone = "+phone;
+
+    private void validate() {
+        String regExp = "^[0-9]*$";
+
+        if (!Pattern.matches(regExp, phone)
+            || phone.isBlank()
+            || phone.length() < 11
+        ) {
+            throw new BadRequestException(UserErrorCode.PHONE_NOT_VALID);
+        }
     }
 }

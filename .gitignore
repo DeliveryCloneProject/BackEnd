@@ -37,3 +37,4 @@ out/
 .vscode/
 
 /config/application.yml
+src/main/generated
