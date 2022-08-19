@@ -5,10 +5,12 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "delivery_user")
 @NoArgsConstructor
+@Getter
 public class User extends BaseEntity {
 
     private String phone;
