@@ -6,5 +6,7 @@ import me.delivery.domain.user.model.entity.User;
 public interface ILoginService {
     Login loginProcess(User user);
 
-    Login getUserSession(long userId);
+    Login findById(long id);
+
+    void deleteSession(long id);
 }

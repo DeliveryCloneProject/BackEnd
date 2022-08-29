@@ -57,6 +57,7 @@ public class UserService implements IUserService {
      */
     @Override
     public User findByNicknameAndPassword(UserLoginParam param) {
+        log.debug("find User");
         User user =  userRepository.findByNicknameAndPassword(param.getNickname(), param.getPassword());
         if(user == null){
             throw new BadRequestException(UserErrorCode.USER_NOT_FOUND);

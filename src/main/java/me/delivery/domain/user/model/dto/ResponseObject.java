@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @author  leedy
  * @Description response 객체가 담길 Class. 특정 형태가 없이 boolean 이나 String으로 return 해야 할 때 사용.
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class ResponseObject<E> {
+public class ResponseObject<E> implements Serializable {
 
     private E result;
 

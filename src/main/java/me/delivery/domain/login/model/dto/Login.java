@@ -5,14 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import me.delivery.domain.user.model.entity.User;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 
 @NoArgsConstructor
-@ToString
 @Getter
+@ToString
+@RedisHash("member")
 public class Login implements Serializable {
     private static final long serialId = 1L;
+    @Id
     private long id;
 
     private String nickname;

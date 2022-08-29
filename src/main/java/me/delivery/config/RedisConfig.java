@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -18,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @AutoConfigureAfter(RedisAutoConfiguration.class)
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 5)   //5초 유지 테스트용
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1500)
 public class RedisConfig {
 
     @Value("${spring.redis.host}")
@@ -31,7 +30,7 @@ public class RedisConfig {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         var redisTemplate = new RedisTemplate<String, Object>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-      //  redisTemplate.setValueSerializer(new StringRedisSerializer());
+      //  redisTemplate.setValueSerializer(new StringRedisSerializer());    //<String,String> 의 경우에 사용.
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new StringRedisSerializer());
@@ -50,6 +49,7 @@ public class RedisConfig {
         RedisStandaloneConfiguration conf = new RedisStandaloneConfiguration();
         conf.setHostName(host);
         conf.setPort(port);
+        //conf.setDatabase(); redis db 나눌때 사용.
         return new LettuceConnectionFactory(conf);
     }
 }

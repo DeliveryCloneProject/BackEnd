@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum LoginKeys {
-    LOGIN_KEYS("member");
+    LOGIN_KEYS("member::");
 
     private final String message;
 
