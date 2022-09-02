@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import me.delivery.config.exception.BadRequestException;
 import me.delivery.config.exception.BaseException;
 import me.delivery.config.exception.InternalServerErrorException;
+import me.delivery.domain.user.model.dto.ResponseObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,20 +28,30 @@ public class UserAPIController {
      * 가입하려는 고객의 닉네임 사용가능 여부 조회
      */
     @GetMapping("/find/{nickname}")
-    public void findNickname(@PathVariable String nickname) {
+    public ResponseObject findNickname(@PathVariable String nickname) {
+        log.debug("find user nickname => "+nickname);
         userService.checkNicknameUsed(nickname);
+        ResponseObject<Boolean> result = new ResponseObject<>();
+        result.set(true);
+        return result;
     }
 
     @PostMapping("/join/create-user")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createUser(@RequestBody @Valid UserCreateParam userInfo) {
+    public ResponseObject createUser(@RequestBody @Valid UserCreateParam userInfo) {
         User user = userInfo.toEntity();
         userService.createUser(user);
+        ResponseObject<Boolean> result = new ResponseObject<>();
+        result.set(true);
+        return result;
     }
 
     @PostMapping("/quit/{userId}")
-    public void quitUser(@PathVariable long userId) {
+    public ResponseObject quitUser(@PathVariable long userId) {
         userService.quitUser(userId);
+        ResponseObject<Boolean> result = new ResponseObject<>();
+        result.set(true);
+        return result;
     }
 
 }

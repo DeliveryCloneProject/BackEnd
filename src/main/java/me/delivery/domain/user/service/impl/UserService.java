@@ -1,5 +1,6 @@
 package me.delivery.domain.user.service.impl;
 
+import me.delivery.domain.login.model.vo.UserLoginParam;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,5 +48,20 @@ public class UserService implements IUserService {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException(UserErrorCode.USER_NOT_FOUND));
         user.setStatusToQuit();
+    }
+
+    /**
+     * 닉네임 + 패스워드로 유저 조회
+     * @param param
+     * @return
+     */
+    @Override
+    public User findByNicknameAndPassword(UserLoginParam param) {
+        log.debug("find User");
+        User user =  userRepository.findByNicknameAndPassword(param.getNickname(), param.getPassword());
+        if(user == null){
+            throw new BadRequestException(UserErrorCode.USER_NOT_FOUND);
+        }
+        return user;
     }
 }
