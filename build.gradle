@@ -1,13 +1,31 @@
-plugins {
-    id 'org.springframework.boot' version '2.7.1'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
-    id "idea"
+buildscript {
+    ext {
+        kotlinVersion = "1.7.20"
+        springBootVersion = "2.7.1"
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}"
+        classpath "org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}"
+    }
 }
 
-group = 'me'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+apply plugin: "java"
+apply plugin: "kotlin"
+apply plugin: "kotlin-spring"
+apply plugin: "kotlin-jpa"
+apply plugin: "kotlin-kapt"
+apply plugin: "idea"
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+
+group = "me"
+version = "0.0.1-SNAPSHOT"
+sourceCompatibility = "17"
 
 configurations {
     compileOnly {
@@ -20,29 +38,57 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.session:spring-session-data-redis'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-mysql'
-    implementation 'com.querydsl:querydsl-jpa:5.0.0'
-    compileOnly 'org.projectlombok:lombok'
-    compileOnly 'io.lettuce:lettuce-core:6.1.8.RELEASE'
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-    annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0'
+    //spring
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-web"
 
-    implementation 'com.vividsolutions:jts:1.13'
-    implementation 'org.hibernate:hibernate-spatial:5.2.5.Final'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    //common
+    implementation "org.apache.commons:commons-lang3:3.12.0"
 
+    //flyway
+    implementation "org.flywaydb:flyway-core"
+    implementation "org.flywaydb:flyway-mysql"
+
+    //querydsl
+    implementation "com.querydsl:querydsl-jpa:5.0.0"
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0"
+
+    //redis
+    implementation "org.springframework.session:spring-session-data-redis"
+    compileOnly "io.lettuce:lettuce-core:6.2.0.RELEASE"
+
+    //db
+    implementation "com.vividsolutions:jts:1.13"
+    implementation "org.hibernate:hibernate-spatial:5.2.5.Final"
+    runtimeOnly "org.mariadb.jdbc:mariadb-java-client"
+
+    //logging
+    implementation "io.github.microutils:kotlin-logging:3.0.0"
+
+    //lombok
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+
+    //test
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
-tasks.named('test') {
+tasks.named("test") {
     useJUnitPlatform()
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
 def querydslDir = "$projectDir/src/main/generated/sources/annotationProcessor"
@@ -57,4 +103,10 @@ idea {
         generatedSourceDirs += file(querydslDir)
         inheritOutputDirs = true
     }
+}
+
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
 }

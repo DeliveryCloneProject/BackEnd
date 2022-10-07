@@ -1,31 +1,28 @@
-package me.delivery.domain.address.service;
+package me.delivery.domain.address.service
 
-import lombok.RequiredArgsConstructor;
-import me.delivery.domain.address.model.entity.Address;
-import me.delivery.domain.address.model.vo.AddressVO;
-import me.delivery.domain.address.repository.AddressRepository;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.Objects;
+import lombok.RequiredArgsConstructor
+import me.delivery.domain.address.model.entity.Address
+import me.delivery.domain.address.model.vo.AddressVO
+import me.delivery.domain.address.repository.AddressRepository
+import org.springframework.stereotype.Service
+import java.util.*
+import javax.transaction.Transactional
 
 @Service
 @RequiredArgsConstructor
-public class AddressService {
-    private final AddressRepository addressRepository;
+class AddressService (
+    private val addressRepository: AddressRepository
+) {
 
     @Transactional
-    public AddressVO save(Address address) {
-        var find = findByAddress(address);
+    fun save(address: Address): AddressVO {
+        val find = findByAddress(address)
+            ?: addressRepository.save(address)
 
-        if (Objects.nonNull(find)) {
-            return address.toImmutable();
-        }
-
-        return addressRepository.save(address).toImmutable();
+        return find.toImmutable()
     }
 
-    public Address findByAddress(Address address) {
-        return addressRepository.findByAddress(address.getAddress());
+    private fun findByAddress(address: Address): Address? {
+        return addressRepository.findByAddress(address.address)
     }
 }

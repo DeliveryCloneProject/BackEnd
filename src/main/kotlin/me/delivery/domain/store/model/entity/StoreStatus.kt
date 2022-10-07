@@ -1,7 +1,5 @@
-package me.delivery.domain.store.model.entity;
+package me.delivery.domain.store.model.entity
 
-public enum StoreStatus {
-    Active,
-    Stop,
-    Deleted
+enum class StoreStatus {
+    Active, Stop, Deleted
 }

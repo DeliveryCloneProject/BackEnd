@@ -1,11 +1,10 @@
-package me.delivery.domain.address.user.model.vo;
+package me.delivery.domain.address.user.model.vo
 
-import java.time.LocalDateTime;
+import java.time.LocalDateTime
 
-public class UserAddressMyVO {
-    private long id;
-    private LocalDateTime createdAt;
-    private String detailAddress;
-    private String memo;
-
+class UserAddressMyVO {
+    private val id: Long = 0
+    private val createdAt: LocalDateTime? = null
+    private val detailAddress: String? = null
+    private val memo: String? = null
 }

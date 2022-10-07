@@ -1,54 +1,34 @@
-package me.delivery.domain.user.model.entity;
+package me.delivery.domain.user.model.entity
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import me.delivery.domain.entity.BaseEntity
+import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 
 @Entity(name = "delivery_user")
-@NoArgsConstructor
-public class User extends BaseEntity {
-
-    private String phone;
-
-    private String nickname;
-
-    private String password;
-
+class User (
+    val phone: String,
+    var nickname: String,
+    var password: String,
     @Enumerated(EnumType.STRING)
-    private UserStatus status;
-
+    var status: UserStatus,
     @Enumerated(EnumType.STRING)
-    private UserType type;
+    var type: UserType
+) : BaseEntity() {
 
-    @Builder
-    private User(
-            String phone,
-            String nickname,
-            String password,
-            String type
-    ){
-        this.phone = phone;
-        this.nickname = nickname;
-        this.password = password;
-        this.type = UserType.valueOf(type);
+    constructor(phone: String, nickname: String, password: String, type: UserType): this(
+        phone = phone,
+        nickname = nickname,
+        password = password,
+        status = UserStatus.Active,
+        type = type
+    )
+
+    fun setStatusToQuit() {
+        status = UserStatus.Quit
     }
 
-
-    /**
-     * @Description 탈퇴 유저로 설정
-     */
-    public void setStatusToQuit(){
-        this.status = UserStatus.Quit;
+    fun setStatusToActive() {
+        status = UserStatus.Active
     }
-
-    /**
-     * @Description 활동 유저로 설정
-     */
-    public void setStatusToActive(){
-        this.status = UserStatus.Active;
-    }
-
 }

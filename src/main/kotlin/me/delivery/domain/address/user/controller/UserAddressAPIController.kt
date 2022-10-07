@@ -1,44 +1,42 @@
-package me.delivery.domain.address.user.controller;
+package me.delivery.domain.address.user.controller
 
-import lombok.RequiredArgsConstructor;
-import me.delivery.domain.address.user.model.vo.UserAddressSave;
-import me.delivery.domain.address.user.model.vo.UserAddressUpdate;
-import me.delivery.domain.address.user.model.vo.UserAddressVO;
-import me.delivery.domain.address.user.service.UserAddressService;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
+import me.delivery.domain.address.user.model.vo.UserAddressSave
+import me.delivery.domain.address.user.model.vo.UserAddressUpdate
+import me.delivery.domain.address.user.model.vo.UserAddressVO
+import me.delivery.domain.address.user.service.UserAddressService
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/address/users")
-public class UserAddressAPIController {
-    private final UserAddressService userAddressService;
+class UserAddressAPIController (
+    private val userAddressService: UserAddressService,
+) {
 
     @GetMapping("/me")
-    public List<UserAddressVO> myAddress() {
-        var userId = 0; // user가 작업된 이후 변경될 예정
-        return userAddressService.myAddresses(userId);
+    fun myAddress(): List<UserAddressVO> {
+        val userId = 0L
+        return userAddressService.myAddresses(userId)
     }
 
     @PostMapping
-    public UserAddressVO save(@RequestBody @Valid UserAddressSave param) {
-        return userAddressService.save(param);
+    fun save(@RequestBody @Valid param: UserAddressSave): UserAddressVO {
+        val userId = 0L
+        return userAddressService.save(param, userId)
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
-        var userId = 0; // user가 작업된 이후 변경될 예정
-        userAddressService.delete(id, userId);
+    fun delete(@PathVariable id: Long) {
+        val userId = 0L
+        userAddressService.delete(id, userId)
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMemo(@PathVariable long id, @RequestBody @Valid UserAddressUpdate param) {
-        var userId = 0; // user가 작업된 이후 변경될 예정
-        userAddressService.updateMemo(id, userId, param.getMemo(), param.getDetailAddress());
+    fun updateMemo(@PathVariable id: Long, @RequestBody @Valid param: UserAddressUpdate) {
+        val userId = 0
+        userAddressService.updateMemo(id, userId, param.memo, param.detailAddress)
     }
 }

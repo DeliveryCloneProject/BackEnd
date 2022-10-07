@@ -1,57 +1,51 @@
-package me.delivery.domain.address.user.service;
+package me.delivery.domain.address.user.service
 
-import lombok.RequiredArgsConstructor;
-import me.delivery.config.exception.NotFoundException;
-import me.delivery.domain.address.service.AddressService;
-import me.delivery.domain.address.user.model.error_code.UserAddressErrorCode;
-import me.delivery.domain.address.user.model.vo.UserAddressSave;
-import me.delivery.domain.address.user.model.vo.UserAddressVO;
-import me.delivery.domain.address.user.repository.UserAddressRepository;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
+import me.delivery.config.exception.NotFoundException
+import me.delivery.domain.address.service.AddressService
+import me.delivery.domain.address.user.model.error_code.UserAddressErrorCode
+import me.delivery.domain.address.user.model.vo.UserAddressSave
+import me.delivery.domain.address.user.model.vo.UserAddressVO
+import me.delivery.domain.address.user.repository.UserAddressRepository
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import javax.transaction.Transactional
 
 @Service
-@RequiredArgsConstructor
-public class UserAddressService {
-    private final UserAddressRepository userAddressRepository;
-    private final AddressService addressService;
+class UserAddressService (
+    private val userAddressRepository: UserAddressRepository,
+    private val addressService: AddressService,
+) {
 
-    public List<UserAddressVO> myAddresses(long userId) {
+    fun myAddresses(userId: Long): List<UserAddressVO> {
         return userAddressRepository.findByUserIdAndDeletedAtIsNull(userId)
-                .stream()
-                .map(UserAddressVO::from)
-                .collect(Collectors.toList());
+            .map { UserAddressVO(it) }
     }
 
     @Transactional
-    public UserAddressVO save(UserAddressSave param) {
-        var address = param.getAddress().toEntity();
+    fun save(param: UserAddressSave, userId: Long): UserAddressVO {
+        val address = param.address.toEntity()
 
-        var addressVO = addressService.save(address);
+        val addressVO = addressService.save(address)
+        val userAddress = param.toUserAddress(address.id, userId)
 
-        var userAddress = param.toUserAddress(address.getId());
+        userAddressRepository.save(userAddress)
 
-        userAddressRepository.save(userAddress);
-
-        return userAddress.toImmutable(addressVO);
+        return userAddress.toImmutable(addressVO)
     }
 
     @Transactional
-    public void delete(long id, long userId) {
-        var userAddress = userAddressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(UserAddressErrorCode.NotFound));
+    fun delete(id: Long, userId: Long) {
+        val userAddress = userAddressRepository.findByIdOrNull(id)
+            ?: throw NotFoundException(UserAddressErrorCode.NotFound)
 
-        userAddress.delete(userId);
+        userAddress.delete(userId)
     }
 
     @Transactional
-    public void updateMemo(long id, int userId, String memo, String detailAddress) {
-        var userAddress = userAddressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(UserAddressErrorCode.NotFound));
+    fun updateMemo(id: Long, userId: Int, memo: String, detailAddress: String) {
+        val userAddress = userAddressRepository.findByIdOrNull(id)
+            ?: throw NotFoundException(UserAddressErrorCode.NotFound)
 
-        userAddress.updateMemoAndDetailAddress(userId, memo, detailAddress);
+        userAddress.updateMemoAndDetailAddress(userId, memo, detailAddress)
     }
 }

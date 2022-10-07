@@ -1,9 +1,8 @@
-package me.delivery.domain.address.repository;
+package me.delivery.domain.address.repository
 
-import me.delivery.domain.address.model.entity.Address;
-import org.springframework.data.jpa.repository.JpaRepository;
+import me.delivery.domain.address.model.entity.Address
+import org.springframework.data.jpa.repository.JpaRepository
 
-public interface AddressRepository extends JpaRepository<Address, Long> {
-
-    Address findByAddress(String address);
+interface AddressRepository : JpaRepository<Address, Long> {
+    fun findByAddress(address: String): Address?
 }

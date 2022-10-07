@@ -1,6 +1,5 @@
-package me.delivery.domain.user.model.entity;
+package me.delivery.domain.user.model.entity
 
-public enum UserStatus {
-    Active,
-    Quit
+enum class UserStatus {
+    Active, Quit
 }

@@ -1,53 +1,34 @@
-package me.delivery.domain.user.model.vo;
+package me.delivery.domain.user.model.vo
 
-import java.util.regex.Pattern;
+import me.delivery.config.exception.BadRequestException
+import me.delivery.domain.user.model.entity.User
+import me.delivery.domain.user.model.entity.UserType
+import me.delivery.domain.user.model.error.UserErrorCode
+import java.util.regex.Pattern
+import javax.validation.constraints.NotNull
 
-import javax.validation.constraints.NotNull;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import me.delivery.config.exception.BadRequestException;
-import me.delivery.domain.user.model.entity.User;
-import me.delivery.domain.user.model.error.UserErrorCode;
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-/**
- * 유저에게 정보를 입력받는 클래스
- * 해당 클래스로 유저정보를 받고 서비스단에서 status를 결정 후 UserCreate로 변환
- */
-public class UserCreateParam {
+class UserCreateParam(
     @NotNull(message = "닉네임을 입력해주세요")
-    private String nickname;
+    val nickname: String,
     @NotNull(message = "휴대폰 번호를 입력해주세요")
-    private String phone;
+    val phone: String,
     @NotNull(message = "비밀번호를 입력해주세요")
-    private String password;
+    val password: String,
     @NotNull(message = "유저 타입이 필요합니다.")
-    private String type;
+    val type: UserType,
+) {
 
-    public User toEntity(){
-        validate();
-        return User.builder()
-            .nickname(nickname)
-            .password(password)
-            .phone(phone)
-            .type(type)
-            .build();
+    fun toEntity(): User {
+        validate()
+        return User(phone, nickname, password, type)
     }
 
-    private void validate() {
-        String regExp = "^[0-9]*$";
+    private fun validate() {
+        val regExp = "^[0-9]{10,11}$"
 
-        if (!Pattern.matches(regExp, phone)
-            || phone.isBlank()
-            || phone.length() < 11
-        ) {
-            throw new BadRequestException(UserErrorCode.PHONE_NOT_VALID);
+        when {
+            phone.isBlank() || !Pattern.matches(regExp, phone)
+                -> throw BadRequestException(UserErrorCode.PHONE_NOT_VALID)
         }
     }
 }

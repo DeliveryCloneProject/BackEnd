@@ -1,7 +1,5 @@
-package me.delivery.domain.user.model.entity;
+package me.delivery.domain.user.model.entity
 
-public enum UserType {
-    Owner,
-    Member,
-    Admin
+enum class UserType {
+    Owner, Member, Admin
 }

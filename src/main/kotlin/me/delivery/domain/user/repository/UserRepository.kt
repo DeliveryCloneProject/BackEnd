@@ -1,9 +1,8 @@
-package me.delivery.domain.user.repository;
+package me.delivery.domain.user.repository
 
-import me.delivery.domain.user.model.entity.User;
-import me.delivery.domain.user.model.entity.UserStatus;
-import org.springframework.data.jpa.repository.JpaRepository;
+import me.delivery.domain.user.model.entity.User
+import org.springframework.data.jpa.repository.JpaRepository
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByNickname(String nickname);
+interface UserRepository : JpaRepository<User, Long> {
+    fun findByNickname(nickname: String): User?
 }

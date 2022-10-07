@@ -1,24 +1,15 @@
-package me.delivery.domain.store.model.entity;
+package me.delivery.domain.store.model.entity
 
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import me.delivery.domain.entity.BaseEntity
+import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 
 @Entity
-@Getter
-@Setter
-public class Store {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String name;
-    private StoreStatus status;
-
-    public void a() {
-        System.out.println("");
-    }
+class Store (
+    val name: String,
+    @Enumerated(EnumType.STRING)
+    val status: StoreStatus,
+): BaseEntity() {
 
 }
