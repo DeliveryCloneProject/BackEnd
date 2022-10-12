@@ -15,8 +15,9 @@ class UserService (
 ) {
 
     fun checkNicknameUsed(nickname: String) {
-        userRepository.findByNickname(nickname)
-            ?: throw BadRequestException(UserErrorCode.ALREADY_USE_NICKNAME)
+        userRepository.findByNickname(nickname)?.run {
+            throw BadRequestException(UserErrorCode.ALREADY_USE_NICKNAME)
+        }
     }
 
 
